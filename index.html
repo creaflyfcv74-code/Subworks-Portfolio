@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Subworks — UI Designer & Builder Roblox</title>
+<meta name="description" content="Designer d'interfaces et builder Roblox. GUI sur-mesure, polish max, livraison rapide. Disponible pour commissions." />
+
+<!-- Open Graph - CRITIQUE pour les previews Discord -->
+<meta property="og:title" content="Subworks · UI Designer & Builder Roblox" />
+<meta property="og:description" content="GUI sur-mesure, polish max. Disponible pour commissions sur Discord." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="./images/gui-shop-premium.png" />
+<meta property="og:image:width" content="1280" />
+<meta property="og:image:height" content="720" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="theme-color" content="#D4CFC0" />
+
+<!-- Favicon Saturn (identité Subworks) -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230A0A0A'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%23D4CFC0'/%3E%3Cellipse cx='16' cy='16' rx='12' ry='3' fill='none' stroke='%23D4CFC0' stroke-width='1' transform='rotate(-20 16 16)'/%3E%3C/svg%3E" />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================
+   SUBWORKS PORTFOLIO · v1.0
+   Discord-first · Editorial · Minimal
+   ============================================ */
+
+:root {
+  --bg: #0A0A0A;
+  --bg-soft: #131313;
+  --bg-card: #161616;
+  --bg-card-hover: #1E1E1E;
+  --border: #232323;
+  --border-bright: #353535;
+  --accent: #D4CFC0;
+  --accent-dim: #8A8580;
+  --secondary: #7A8489;
+  --text: #F0EBE0;
+  --text-dim: #777772;
+  --text-muted: #4A4A47;
+  --discord: #5865F2;
+  --success: #6FA98D;
+  --max-width: 1320px;
+  --gutter: clamp(20px, 5vw, 80px);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Grain noise overlay subtil */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  opacity: 0.035;
+  z-index: 9999;
+  mix-blend-mode: overlay;
+}
+
+::selection { background: var(--accent); color: var(--bg); }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-dim); }
+
+img { max-width: 100%; display: block; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 22px var(--gutter);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(10, 10, 10, 0.75);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s ease;
+}
+.nav.scrolled { border-bottom-color: var(--border); }
+
+.nav-logo {
+  display: flex; align-items: center; gap: 12px;
+  font-family: 'Instrument Serif', serif;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  color: var(--text);
+}
+.nav-logo svg { width: 28px; height: 28px; transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.nav-logo:hover svg { transform: rotate(35deg); }
+
+.nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
+.nav-links a {
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+  position: relative;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute; bottom: -6px; left: 0;
+  width: 0; height: 1px;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+.nav-links a:hover { color: var(--accent); }
+.nav-links a:hover::after { width: 100%; }
+
+.nav-cta {
+  padding: 9px 18px;
+  border: 1px solid var(--border-bright);
+  border-radius: 100px;
+  color: var(--text) !important;
+  font-size: 11px !important;
+  transition: all 0.3s ease;
+}
+.nav-cta:hover {
+  background: var(--accent);
+  color: var(--bg) !important;
+  border-color: var(--accent);
+}
+.nav-cta::after { display: none !important; }
+
+@media (max-width: 720px) {
+  .nav-links { gap: 18px; }
+  .nav-links a:not(.nav-cta) { display: none; }
+}
+
+/* ============================================
+   HERO
+   ============================================ */
+.hero {
+  min-height: 100vh;
+  padding: 140px var(--gutter) 80px;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+.hero-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  width: fit-content;
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.1s forwards;
+}
+.hero-status::before {
+  content: '';
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 10px var(--success);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.hero h1 {
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  font-size: clamp(60px, 11vw, 160px);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.2s forwards;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.hero-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.4s forwards;
+}
+
+.hero-desc {
+  max-width: 520px;
+  font-size: 18px;
+  line-height: 1.65;
+  color: var(--text-dim);
+  margin-bottom: 48px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.5s forwards;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.6s forwards;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 26px;
+  border-radius: 100px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 1px solid;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+.btn-primary:hover {
+  background: var(--text);
+  border-color: var(--text);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border-bright);
+}
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.btn svg { width: 14px; height: 14px; }
+
+/* Decorative side numbering for hero */
+.hero-meta {
+  position: absolute;
+  right: var(--gutter);
+  top: 50%;
+  transform: translateY(-50%) rotate(180deg);
+  writing-mode: vertical-rl;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: none;
+}
+@media (min-width: 1100px) { .hero-meta { display: block; } }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.1); }
+}
+
+/* ============================================
+   SECTIONS GENERIC
+   ============================================ */
+.section {
+  padding: 120px var(--gutter);
+  max-width: var(--max-width);
+  margin: 0 auto;
+  position: relative;
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 48px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.section-label .num { color: var(--accent); }
+.section-label .line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+  max-width: 120px;
+}
+.section-label .lbl { color: var(--text-dim); }
+
+.section-title {
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  font-size: clamp(38px, 5.5vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 24px;
+  max-width: 800px;
+}
+.section-title em { font-style: italic; color: var(--accent); }
+
+.section-intro {
+  font-size: 17px;
+  color: var(--text-dim);
+  max-width: 580px;
+  margin-bottom: 64px;
+  line-height: 1.6;
+}
+
+/* ============================================
+   PORTFOLIO
+   ============================================ */
+.filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  padding: 9px 18px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  background: transparent;
+  transition: all 0.25s ease;
+}
+.filter-btn:hover {
+  color: var(--text);
+  border-color: var(--border-bright);
+}
+.filter-btn.active {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+.filter-btn .count {
+  font-size: 10px;
+  opacity: 0.6;
+  margin-left: 4px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 24px;
+}
+
+.card {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 1;
+  transform: translateY(0);
+}
+.card.hidden {
+  display: none;
+}
+.card:hover {
+  border-color: var(--accent-dim);
+  transform: translateY(-4px);
+}
+.card:hover .card-img {
+  transform: scale(1.03);
+}
+
+/* Asymmetric layout */
+.card.size-lg { grid-column: span 4; }
+.card.size-md { grid-column: span 3; }
+.card.size-sm { grid-column: span 2; }
+
+@media (max-width: 1024px) {
+  .grid { grid-template-columns: repeat(4, 1fr); }
+  .card.size-lg, .card.size-md { grid-column: span 4; }
+  .card.size-sm { grid-column: span 2; }
+}
+@media (max-width: 640px) {
+  .grid { grid-template-columns: 1fr; gap: 18px; }
+  .card.size-lg, .card.size-md, .card.size-sm { grid-column: span 1; }
+}
+
+.card-image-wrap {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16/10;
+  background:
+    linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+.card-img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 6px;
+  transition: transform 0.6s ease;
+}
+
+.card-info {
+  padding: 22px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.card-cat {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.card-title {
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.card-desc {
+  font-size: 13.5px;
+  color: var(--text-dim);
+  line-height: 1.55;
+  margin-top: 4px;
+}
+
+.card-zoom {
+  position: absolute;
+  top: 14px; right: 14px;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(10, 10, 10, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-bright);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.3s ease;
+}
+.card:hover .card-zoom {
+  opacity: 1;
+  transform: scale(1);
+}
+.card-zoom svg { width: 14px; height: 14px; color: var(--text); }
+
+/* ============================================
+   SERVICES / PRICING
+   ============================================ */
+.pricing {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.price-card {
+  padding: 32px 28px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+.price-card:hover {
+  border-color: var(--accent-dim);
+  transform: translateY(-3px);
+}
+.price-card.featured {
+  border-color: var(--accent);
+  background: linear-gradient(165deg, var(--bg-card), var(--bg-soft));
+}
+.price-card.featured::before {
+  content: 'POPULAIRE';
+  position: absolute;
+  top: -10px; left: 24px;
+  background: var(--accent);
+  color: var(--bg);
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+}
+.price-cat {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent-dim);
+  margin-bottom: 12px;
+}
+.price-name {
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+.price-amount {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 24px;
+}
+.price-amount .from {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.price-amount .num {
+  font-family: 'Instrument Serif', serif;
+  font-size: 44px;
+  color: var(--text);
+  font-weight: 400;
+  line-height: 1;
+}
+.price-amount .currency {
+  font-family: 'Instrument Serif', serif;
+  font-size: 22px;
+  color: var(--text-dim);
+}
+.price-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text-dim);
+}
+.price-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.price-features li::before {
+  content: '+';
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  margin-top: -1px;
+}
+
+.pricing-note {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  text-align: center;
+  padding: 16px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+}
+
+/* ============================================
+   PROCESS
+   ============================================ */
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 32px;
+}
+.process-step {
+  position: relative;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+}
+.process-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  margin-bottom: 16px;
+}
+.process-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 24px;
+  font-weight: 400;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+.process-desc {
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* ============================================
+   CONTACT
+   ============================================ */
+.contact-block {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: clamp(40px, 6vw, 80px);
+  background: linear-gradient(165deg, var(--bg-card), var(--bg-soft));
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  align-items: center;
+}
+@media (min-width: 800px) {
+  .contact-block { grid-template-columns: 1.2fr 1fr; }
+}
+
+.contact-text h3 {
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  font-size: clamp(32px, 4vw, 52px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+}
+.contact-text h3 em { font-style: italic; color: var(--accent); }
+.contact-text p {
+  color: var(--text-dim);
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 460px;
+}
+
+.discord-card {
+  background: var(--bg);
+  border: 1px solid var(--border-bright);
+  border-radius: 14px;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.discord-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 3px;
+  background: var(--discord);
+}
+.discord-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+.discord-label svg { width: 16px; height: 16px; color: var(--discord); }
+
+.discord-username {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  color: var(--text);
+  margin-bottom: 20px;
+  letter-spacing: -0.01em;
+  word-break: break-all;
+}
+
+.copy-btn {
+  width: 100%;
+  padding: 14px 20px;
+  background: var(--discord);
+  color: white;
+  border-radius: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.25s ease;
+}
+.copy-btn:hover { background: #4752c4; transform: translateY(-1px); }
+.copy-btn.copied { background: var(--success); }
+.copy-btn svg { width: 14px; height: 14px; }
+
+.contact-meta {
+  display: flex;
+  gap: 28px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+.contact-meta span { display: flex; align-items: center; gap: 6px; }
+.contact-meta .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--success); }
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.footer {
+  padding: 48px var(--gutter);
+  max-width: var(--max-width);
+  margin: 0 auto;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+/* ============================================
+   LIGHTBOX MODAL
+   ============================================ */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(20px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.lightbox.open {
+  opacity: 1;
+  pointer-events: all;
+}
+.lightbox-inner {
+  max-width: 1200px;
+  width: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  transform: scale(0.95);
+  transition: transform 0.3s ease;
+}
+.lightbox.open .lightbox-inner { transform: scale(1); }
+.lightbox img {
+  max-width: 100%;
+  max-height: 75vh;
+  object-fit: contain;
+  border-radius: 8px;
+}
+.lightbox-caption {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 14px;
+}
+.lightbox-caption strong {
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  font-size: 22px;
+  color: var(--text);
+  display: block;
+  margin-bottom: 6px;
+}
+.lightbox-close {
+  position: absolute;
+  top: 24px; right: 24px;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-bright);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: var(--text);
+  transition: all 0.2s ease;
+}
+.lightbox-close:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+
+/* ============================================
+   REVEAL ON SCROLL
+   ============================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================
+     NAV
+     ============================================ -->
+<nav class="nav" id="nav">
+  <a href="#" class="nav-logo" aria-label="Subworks">
+    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="16" r="5" fill="currentColor"/>
+      <ellipse cx="16" cy="16" rx="13" ry="3.5" fill="none" stroke="currentColor" stroke-width="1.2" transform="rotate(-20 16 16)"/>
+    </svg>
+    Subworks
+  </a>
+  <ul class="nav-links">
+    <li><a href="#travaux">Travaux</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#process">Processus</a></li>
+    <li><a href="#contact" class="nav-cta">Commander</a></li>
+  </ul>
+</nav>
+
+<!-- ============================================
+     HERO
+     ============================================ -->
+<header class="hero">
+  <div class="hero-status">Disponible pour commissions</div>
+
+  <h1>Designer<br>d'<em>interfaces.</em><br>Builder Roblox.</h1>
+
+  <p class="hero-sub">UI · GUI · Build — Roblox</p>
+
+  <p class="hero-desc">
+    Création de GUI sur-mesure et de builds cinematic pour vos jeux Roblox.
+    Polish maximum, livraison rapide, communication directe sur Discord.
+  </p>
+
+  <div class="hero-actions">
+    <a href="#travaux" class="btn btn-primary">
+      Voir les travaux
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+    </a>
+    <a href="#contact" class="btn btn-secondary">Me contacter</a>
+  </div>
+
+  <div class="hero-meta">v1.0 · 2026 · Subworks Studio</div>
+</header>
+
+<!-- ============================================
+     SECTION 01 · TRAVAUX
+     ============================================ -->
+<section class="section" id="travaux">
+  <div class="section-label">
+    <span class="num">01</span>
+    <span class="lbl">Travaux</span>
+    <span class="line"></span>
+  </div>
+
+  <h2 class="section-title reveal">Une <em>sélection</em> de pièces récentes.</h2>
+  <p class="section-intro reveal">
+    Sélection de mes travaux dont je suis le plus fier !
+  </p>
+
+  <div class="filters reveal">
+    <button class="filter-btn active" data-filter="all">Tous <span class="count">6</span></button>
+    <button class="filter-btn" data-filter="gui">GUI / Interface <span class="count">4</span></button>
+    <button class="filter-btn" data-filter="build">Builds Roblox <span class="count">2</span></button>
+  </div>
+
+  <div class="grid" id="portfolio-grid">
+
+    <!-- Card 1 : GUI Shop Premium (PIÈCE MAÎTRESSE) -->
+    <article class="card size-lg reveal" data-category="gui" data-title="GUI de Shop Style Stud !" data-desc="Interface boutique complète avec packs VIP, prix barrés, illustrations custom et sunbursts. Pensée pour la conversion." data-img="./images/gui-shop-premium.png">
+      <div class="card-image-wrap">
+        <img class="card-img" src="./images/gui-shop-premium.png" alt="GUI de Shop Style Stud" loading="lazy" />
+        <div class="card-zoom">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        </div>
+      </div>
+      <div class="card-info">
+        <span class="card-cat">GUI · Interface</span>
+        <h3 class="card-title">GUI de Shop · Style Stud</h3>
+        <p class="card-desc">Boutique complète avec packs VIP, illustrations custom, sunbursts et système de prix barrés.</p>
+      </div>
+    </article>
+
+    <!-- Card 2 : GUI Upgrade Panel -->
+    <article class="card size-md reveal" data-category="gui" data-title="GUI d'Upgrade Style Stud" data-desc="Panel d'amélioration multi-stats avec icônes custom, double devise (cash + Robux) et progression visible." data-img="./images/gui-upgrade-panel.png">
+      <div class="card-image-wrap">
+        <img class="card-img" src="./images/gui-upgrade-panel.png" alt="GUI d'Upgrade Style Stud" loading="lazy" />
+        <div class="card-zoom">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        </div>
+      </div>
+      <div class="card-info">
+        <span class="card-cat">GUI · Interface</span>
+        <h3 class="card-title">GUI d'Upgrade · Style Stud</h3>
+        <p class="card-desc">Système d'amélioration multi-stats avec double devise et progression visible.</p>
+      </div>
+    </article>
+
+    <!-- Card 3 : GUI Menu boutons -->
+    <article class="card size-md reveal" data-category="gui" data-title="Boutons Style Stud" data-desc="Set de boutons (Shop, Upgrade, Rebirth) style Stud avec gradients, halftones et code couleur sémantique." data-img="./images/gui-menu-boutons-stud.png">
+      <div class="card-image-wrap">
+        <img class="card-img" src="./images/gui-menu-boutons-stud.png" alt="Boutons Style Stud" loading="lazy" />
+        <div class="card-zoom">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        </div>
+      </div>
+      <div class="card-info">
+        <span class="card-cat">GUI · Interface</span>
+        <h3 class="card-title">Boutons · Style Stud</h3>
+        <p class="card-desc">Set de boutons gradient style Stud avec halftones et code couleur sémantique.</p>
+      </div>
+    </article>
+
+    <!-- Card 4 : Boutons Style Jeu de combat -->
+    <article class="card size-md reveal" data-category="gui" data-title="Boutons Style Jeu de combat" data-desc="Set de boutons (Shop, Rebirth, Upgrade) au style jeu de combat, layout horizontal et finitions premium." data-img="./images/gui-menu-boutons.png">
+      <div class="card-image-wrap">
+        <img class="card-img" src="./images/gui-menu-boutons.png" alt="Boutons Style Jeu de combat" loading="lazy" />
+        <div class="card-zoom">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        </div>
+      </div>
+      <div class="card-info">
+        <span class="card-cat">GUI · Interface</span>
+        <h3 class="card-title">Boutons · Style Jeu de combat</h3>
+        <p class="card-desc">Set de boutons au style jeu de combat, layout horizontal et finitions premium.</p>
+      </div>
+    </article>
+
+    <!-- Card 4 : Build Lego Stylisé -->
+    <article class="card size-lg reveal" data-category="build" data-title="Bases Stud Créées pour un Client" data-desc="Map complète style Stud, structures modulaires en blocs Roblox avec éclairage intérieur et tapis rouges. Projet client." data-img="./images/Map-stud.png">
+      <div class="card-image-wrap">
+        <img class="card-img" src="./images/Map-stud.png" alt="Bases Stud créées pour un client" loading="lazy" />
+        <div class="card-zoom">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        </div>
+      </div>
+      <div class="card-info">
+        <span class="card-cat">Build · Roblox</span>
+        <h3 class="card-title">Bases Stud · Projet Client</h3>
+        <p class="card-desc">Map complète style Stud avec structures modulaires, éclairage intérieur et passages signalés.</p>
+      </div>
+    </article>
+
+    <!-- Card 5 : Build Arène Bois -->
+    <article class="card size-sm reveal" data-category="build" data-title="Base Rebirth 1, 2 et 3 · Style Stud" data-desc="Bases de rebirth multi-niveaux en bois style Stud, avec lanternes d'ambiance. Progression visuelle entre les paliers." data-img="./images/bases-bois-stud.png">
+      <div class="card-image-wrap">
+        <img class="card-img" src="./images/bases-bois-stud.png" alt="Base Rebirth Style Stud" loading="lazy" />
+        <div class="card-zoom">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        </div>
+      </div>
+      <div class="card-info">
+        <span class="card-cat">Build · Roblox</span>
+        <h3 class="card-title">Base Rebirth 1·2·3 · Style Stud</h3>
+        <p class="card-desc">Bases de rebirth multi-niveaux avec lanternes et progression visuelle entre paliers.</p>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION 02 · SERVICES
+     ============================================ -->
+<section class="section" id="services">
+  <div class="section-label">
+    <span class="num">02</span>
+    <span class="lbl">Services</span>
+    <span class="line"></span>
+  </div>
+
+  <h2 class="section-title reveal">Tarifs <em>transparents.</em> Sur-mesure.</h2>
+  <p class="section-intro reveal">
+    GUI et builds, grilles de base ci-dessous. Pour les projets complexes ou personnalisés,
+    devis gratuit sur Discord en moins de 24h.
+  </p>
+
+  <!-- OFFRES GUI -->
+  <h3 style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:24px;" class="reveal">— Interfaces / GUI</h3>
+  <div class="pricing">
+    <div class="price-card featured reveal">
+      <div class="price-cat">Single</div>
+      <h3 class="price-name">GUI isolée</h3>
+      <div class="price-amount">
+        <span class="from">dès</span>
+        <span class="num">15</span>
+        <span class="currency">€</span>
+      </div>
+      <ul class="price-features">
+        <li>1 interface complète (shop, menu...)</li>
+        <li>3 révisions incluses</li>
+        <li>Sources Figma fournies</li>
+        <li>Livraison sous 5 jours</li>
+      </ul>
+    </div>
+
+    <div class="price-card reveal">
+      <div class="price-cat">Pack</div>
+      <h3 class="price-name">Pack 3 GUI</h3>
+      <div class="price-amount">
+        <span class="from">dès</span>
+        <span class="num">45</span>
+        <span class="currency">€</span>
+      </div>
+      <ul class="price-features">
+        <li>3 GUI cohérentes (même style)</li>
+        <li>Révisions illimitées</li>
+        <li>Sources Figma fournies</li>
+        <li>Livraison sous 10 jours</li>
+      </ul>
+    </div>
+
+    <div class="price-card reveal">
+      <div class="price-cat">Bundle</div>
+      <h3 class="price-name">Set complet</h3>
+      <div class="price-amount">
+        <span class="from">dès</span>
+        <span class="num">100</span>
+        <span class="currency">€</span>
+      </div>
+      <ul class="price-features">
+        <li>5+ GUI pour un jeu entier</li>
+        <li>Charte graphique cohérente</li>
+        <li>Sources Figma + assets</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- OFFRES BUILDS -->
+  <h3 style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin:48px 0 24px;" class="reveal">— Builds Roblox</h3>
+  <div class="pricing">
+    <div class="price-card reveal">
+      <div class="price-cat">Single</div>
+      <h3 class="price-name">Base / Structure</h3>
+      <div class="price-amount">
+        <span class="from">dès</span>
+        <span class="num">12</span>
+        <span class="currency">€</span>
+      </div>
+      <ul class="price-features">
+        <li>1 base ou structure (style Stud)</li>
+        <li>2 révisions incluses</li>
+        <li>Optimisée pour le jeu</li>
+        <li>Livraison sous 4 jours</li>
+      </ul>
+    </div>
+
+    <div class="price-card featured reveal">
+      <div class="price-cat">Pack</div>
+      <h3 class="price-name">Pack Rebirth</h3>
+      <div class="price-amount">
+        <span class="from">dès</span>
+        <span class="num">30</span>
+        <span class="currency">€</span>
+      </div>
+      <ul class="price-features">
+        <li>3 bases avec progression (1·2·3)</li>
+        <li>Cohérence visuelle garantie</li>
+        <li>Révisions illimitées</li>
+        <li>Livraison sous 8 jours</li>
+      </ul>
+    </div>
+
+    <div class="price-card reveal">
+      <div class="price-cat">Bundle</div>
+      <h3 class="price-name">Map complète</h3>
+      <div class="price-amount">
+        <span class="from">dès</span>
+        <span class="num">80</span>
+        <span class="currency">€</span>
+      </div>
+      <ul class="price-features">
+        <li>Map entière pour ton jeu</li>
+        <li>Plusieurs zones / bâtiments</li>
+        <li>Éclairage + ambiance</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="pricing-note reveal">
+    Logo · Charte graphique · Projet custom → tarifs sur devis · contact Discord
+  </p>
+</section>
+
+<!-- ============================================
+     SECTION 03 · PROCESS
+     ============================================ -->
+<section class="section" id="process">
+  <div class="section-label">
+    <span class="num">03</span>
+    <span class="lbl">Processus</span>
+    <span class="line"></span>
+  </div>
+
+  <h2 class="section-title reveal">Workflow <em>simple.</em> Communication directe.</h2>
+  <p class="section-intro reveal">
+    Tout se passe sur Discord. Pas d'intermédiaire, pas de plateforme tierce.
+    Briefing, suivi, livraison — un seul canal.
+  </p>
+
+  <div class="process-grid">
+    <div class="process-step reveal">
+      <div class="process-num">01</div>
+      <h3 class="process-title">Brief</h3>
+      <p class="process-desc">Tu m'envoies ton idée sur Discord. Je pose 2-3 questions pour cadrer le style, l'usage et tes refs.</p>
+    </div>
+    <div class="process-step reveal">
+      <div class="process-num">02</div>
+      <h3 class="process-title">Devis</h3>
+      <p class="process-desc">Sous 24h tu reçois un devis clair avec le délai. Si tu valides, je commence direct après acompte 30%.</p>
+    </div>
+    <div class="process-step reveal">
+      <div class="process-num">03</div>
+      <h3 class="process-title">Maquette</h3>
+      <p class="process-desc">Première version envoyée selon le délai. On itère ensemble avec les révisions incluses.</p>
+    </div>
+    <div class="process-step reveal">
+      <div class="process-num">04</div>
+      <h3 class="process-title">Livraison</h3>
+      <p class="process-desc">Fichiers finaux (PNG haute déf, sources Figma, assets séparés). Paiement du solde à la livraison.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION 04 · CONTACT
+     ============================================ -->
+<section class="section" id="contact">
+  <div class="section-label">
+    <span class="num">04</span>
+    <span class="lbl">Contact</span>
+    <span class="line"></span>
+  </div>
+
+  <div class="contact-block reveal">
+    <div class="contact-text">
+      <h3>Démarrons ton <em>projet</em> aujourd'hui.</h3>
+      <p>Ajoute-moi sur Discord et balance-moi ton idée. Je réponds en général sous 6h.
+      Pas de formulaire, pas de mail à rallonge — juste une conversation directe.</p>
+      <div class="contact-meta">
+        <span><span class="dot"></span>En ligne aujourd'hui</span>
+        <span>Réponse &lt; 6h</span>
+        <span>Devis gratuit</span>
+      </div>
+    </div>
+
+    <div class="discord-card">
+      <div class="discord-label">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.211.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+        Mon Discord
+      </div>
+      <div class="discord-username" id="discord-username">creaflyfcv</div>
+      <button class="copy-btn" id="copy-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        <span id="copy-text">Copier mon username</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     FOOTER
+     ============================================ -->
+<footer class="footer">
+  <span>© 2026 Subworks · Studio indépendant</span>
+  <span>Build & Designed by Subworks</span>
+</footer>
+
+<!-- ============================================
+     LIGHTBOX
+     ============================================ -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightbox-close" aria-label="Fermer">✕</button>
+  <div class="lightbox-inner">
+    <img id="lightbox-img" src="" alt="" />
+    <div class="lightbox-caption">
+      <strong id="lightbox-title"></strong>
+      <span id="lightbox-desc"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================
+   CONFIG · ⚠️ MODIFIE TON USERNAME ICI ⚠️
+   ============================================ */
+const DISCORD_USERNAME = "creaflyfcv"; // ← Ton username Discord
+
+document.getElementById("discord-username").textContent = DISCORD_USERNAME;
+
+/* ============================================
+   NAV scroll detection
+   ============================================ */
+const nav = document.getElementById("nav");
+window.addEventListener("scroll", () => {
+  nav.classList.toggle("scrolled", window.scrollY > 30);
+});
+
+/* ============================================
+   PORTFOLIO FILTERS
+   ============================================ */
+const filterButtons = document.querySelectorAll(".filter-btn");
+const cards = document.querySelectorAll(".card");
+
+filterButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    filterButtons.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const filter = btn.dataset.filter;
+    cards.forEach(card => {
+      const match = filter === "all" || card.dataset.category === filter;
+      card.classList.toggle("hidden", !match);
+    });
+  });
+});
+
+/* ============================================
+   LIGHTBOX (clic sur carte → preview)
+   ============================================ */
+const lightbox = document.getElementById("lightbox");
+const lbImg = document.getElementById("lightbox-img");
+const lbTitle = document.getElementById("lightbox-title");
+const lbDesc = document.getElementById("lightbox-desc");
+const lbClose = document.getElementById("lightbox-close");
+
+cards.forEach(card => {
+  card.addEventListener("click", () => {
+    lbImg.src = card.dataset.img;
+    lbImg.alt = card.dataset.title;
+    lbTitle.textContent = card.dataset.title;
+    lbDesc.textContent = card.dataset.desc;
+    lightbox.classList.add("open");
+    document.body.style.overflow = "hidden";
+  });
+});
+
+function closeLightbox() {
+  lightbox.classList.remove("open");
+  document.body.style.overflow = "";
+}
+lbClose.addEventListener("click", closeLightbox);
+lightbox.addEventListener("click", (e) => { if (e.target === lightbox) closeLightbox(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeLightbox(); });
+
+/* ============================================
+   COPY DISCORD USERNAME
+   ============================================ */
+const copyBtn = document.getElementById("copy-btn");
+const copyText = document.getElementById("copy-text");
+
+copyBtn.addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(DISCORD_USERNAME);
+    copyBtn.classList.add("copied");
+    copyText.textContent = "✓ Copié dans le presse-papier";
+    setTimeout(() => {
+      copyBtn.classList.remove("copied");
+      copyText.textContent = "Copier mon username";
+    }, 2200);
+  } catch (e) {
+    copyText.textContent = "Erreur · Copie manuelle";
+  }
+});
+
+/* ============================================
+   REVEAL ON SCROLL (Intersection Observer)
+   ============================================ */
+const revealEls = document.querySelectorAll(".reveal");
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("visible");
+      io.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+
+revealEls.forEach(el => io.observe(el));
+
+/* ============================================
+   STAGGER reveal des cards
+   ============================================ */
+cards.forEach((card, i) => {
+  card.style.transitionDelay = `${i * 60}ms`;
+});
+</script>
+
+</body>
+</html>
